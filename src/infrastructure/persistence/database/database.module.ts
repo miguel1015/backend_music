@@ -14,6 +14,10 @@ pg.types.setTypeParser(TIMESTAMP_OID, (value: string) =>
 );
 pg.defaults.parseInputDatesAsUTC = true;
 
+// En Vercel (NODE_ENV=production) cada función abre su propia conexión y
+// arranca en frío: no se sincroniza el esquema ni se registran las consultas
+const isProduction = process.env.NODE_ENV === 'production';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -24,8 +28,9 @@ pg.defaults.parseInputDatesAsUTC = true;
       port: 5432,
       url: process.env.DB_DATABASE,
       entities: [...ENTITIES],
-      logging: true,
-      synchronize: true,
+      logging: !isProduction,
+      synchronize: !isProduction,
+      extra: isProduction ? { max: 3 } : undefined,
     }),
   ],
 })
