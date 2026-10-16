@@ -1,3 +1,13 @@
+# Solo este proyecto (pnpm 9 exige la lista "packages")
+packages:
+  - '.'
+
+# Paquetes que pueden ejecutar scripts al instalarse (bcrypt compila su
+# módulo nativo). onlyBuiltDependencies: pnpm 10; allowBuilds: versiones nuevas
+onlyBuiltDependencies:
+  - '@nestjs/core'
+  - bcrypt
+
 allowBuilds:
   '@nestjs/core': true
   bcrypt: true
